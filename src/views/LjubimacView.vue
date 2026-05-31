@@ -1,8 +1,8 @@
 <template>
     <h1> Ljubimac Mirko </h1>
     <p>pozdrav bando, mazite me!!</p>
-    <img src="`/images/medo.png`" width=10%/>
-    <img :src="`/images/healthBar${health}.png`"/>
+    <img src="/images/medo.png" width="10%" />
+    <img :src="`/images/healthBar${health}.png`" />
     <br>
     <button @click="decreaseHealth">-1</button>
     <button @click="increaseHealth">+1</button>
