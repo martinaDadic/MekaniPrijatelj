@@ -1,20 +1,51 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
-  <div id="container">
+<div id="container">
     <header>
 
       <div class="wrapper">
         <h1>Mekani ljubimci</h1>
-
-        <nav>
-          <RouterLink to="/">Početna stranica</RouterLink>
-        </nav>
       </div>
     </header>
 
-    <RouterView />
   </div>
+
+  <div v-else-if="isAuthenticated && user">
+    <p>Logged in as {{ user.email }}</p>
+    <RouterLink to="/">Moj profil</RouterLink>
+
+    <button @click="logout">Logout</button>
+  </div>
+
+  <div v-else>
+    <p v-if="error">Error: {{ error.message }}</p>
+
+    <button @click="signup">Signup</button>
+
+    <button @click="login">Login</button>
+  </div>
+  <nav>
+          <RouterLink to="/">Početna stranica</RouterLink>
+  </nav>
+  <RouterView />
 </template>
+
+<script setup lang="ts">
+import { useAuth0 } from '@auth0/auth0-vue'
+import { RouterLink, RouterView } from 'vue-router'
+
+const {
+  isAuthenticated,
+  error,
+  loginWithRedirect,
+  logout: auth0Logout,
+  user
+} = useAuth0()
+
+const signup = () =>
+  loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
+
+const login = () => loginWithRedirect()
+
+const logout = () =>
+  auth0Logout({ logoutParams: { returnTo: window.location.origin } })
+</script>
