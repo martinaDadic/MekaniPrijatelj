@@ -8,7 +8,7 @@ const headers = {
 const ENTITY_HAPPINESS = 'counter.razina_srece'
 const ENTITY_NAME = 'input_text.toyname'
 
-const BASE = 'http://homeassistant.local:8123'
+const BASE = 'https://mekaniprijateljweb.onrender.com'
 
 export async function getState(entityId) {
   const res = await fetch(`${BASE}/api/states/${entityId}`, { headers })
