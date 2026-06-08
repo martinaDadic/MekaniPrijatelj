@@ -1,4 +1,5 @@
 const HA_TOKEN = import.meta.env.VITE_HA_TOKEN;
+const HA_URL = import.meta.env.VITE_HA_URL || "http://homeassistant.local:8123";
 
 const headers = {
   Authorization: `Bearer ${HA_TOKEN}`,
@@ -6,18 +7,22 @@ const headers = {
 };
 
 async function haGet(path) {
-  const res = await fetch(`/api${path}`, { headers });
+  const res = await fetch(`${HA_URL}/api${path}`, {
+    headers,
+  });
+
   if (!res.ok) throw new Error(`HA ${res.status}: ${res.statusText}`);
   return res.json();
 }
 
 async function haPost(path, body) {
-  const res = await fetch(`/api${path}`, {
+  const res = await fetch(`${HA_URL}/api${path}`, {
     method: "POST",
     headers,
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error(res.status);
+
+  if (!res.ok) throw new Error(`HA ${res.status}: ${res.statusText}`);
   return res.json();
 }
 
@@ -44,7 +49,7 @@ export async function createPlushie(id, name) {
   if (!existing) throw new Error(`Ljubimac s ID-om ${id} ne postoji u Home Assistantu.`);
 
   await haPost(`/services/input_text/set_value`, {
-    entity_id: nameEntity(id),
+    entity_id: id,
     value: name.trim(),
   });
 }
