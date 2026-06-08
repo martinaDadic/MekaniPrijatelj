@@ -11,7 +11,7 @@
 
   <div v-if="isAuthenticated && user">
     <p>Logged in as {{ user.email }}</p>
-    <RouterLink to="/">Moj profil</RouterLink>
+    <RouterLink to="/profil">Moj profil</RouterLink>
 
     <button @click="logout">Logout</button>
   </div>
