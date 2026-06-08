@@ -5,8 +5,8 @@ const headers = {
   'Content-Type': 'application/json',
 }
 
-const ENTITY_HAPPINESS = 'input_number.razina_srece'
-const ENTITY_NAME      = 'input_text.ime_medvjedica'
+const ENTITY_HAPPINESS = 'counter.razina_srece'
+const ENTITY_NAME = 'input_text.toyname'
 
 const BASE = import.meta.env.DEV
   ? ''
