@@ -5,13 +5,6 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-function happinessEntity(id) {
-  return `counter.razina_srece_${id}`;
-}
-function nameEntity(id) {
-  return `input_text.ime_medvjedica_${id}`;
-}
-
 async function haGet(path) {
   const res = await fetch(`/api${path}`, { headers });
   if (!res.ok) throw new Error(`HA ${res.status}: ${res.statusText}`);
@@ -29,18 +22,20 @@ async function haPost(path, body) {
 }
 
 export async function getPlushie(id) {
-  try {
-    const [happinessState, nameState] = await Promise.all([
-      haGet(`/states/${happinessEntity(id)}`),
-      haGet(`/states/${nameEntity(id)}`),
-    ]);
+  if(id == 2) {
+    try {
+      const [happinessState, nameState] = await Promise.all([
+        haGet(`/states/counter.razina_srece`),
+        haGet(`/states/input_text.toyname`),
+      ]);
 
-    const happiness = happinessState.state;
-    const name = nameState.state?.trim() || `Ljubimac ${id}`;
+      const happiness = happinessState.state;
+      const name = nameState.state?.trim() || `Ljubimac ${id}`;
 
-    return { id, name, happiness };
-  } catch {
-    return null;
+      return { id, name, happiness };
+    } catch {
+      return null;
+    }
   }
 }
 
