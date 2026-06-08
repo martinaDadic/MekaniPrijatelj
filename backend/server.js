@@ -1,8 +1,8 @@
-const express = require('express');
-const { Pool } = require('pg');
-const { auth } = require('express-oauth2-jwt-bearer');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const { Pool } = require("pg");
+const { auth } = require("express-oauth2-jwt-bearer");
+const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
@@ -10,19 +10,18 @@ app.use(express.json());
 
 const port = process.env.PORT || 8080;
 
+const HA_URL = process.env.HA_URL;
+const HA_TOKEN = process.env.HA_TOKEN;
+
 const jwtCheck = auth({
-  audience: 'https://mekaniprijatelj-api',
-  issuerBaseURL: 'https://dev-i25ptmtk6aiqoev1.us.auth0.com/',
-  tokenSigningAlg: 'RS256'
+  audience: "https://mekaniprijatelj-api",
+  issuerBaseURL: "https://dev-i25ptmtk6aiqoev1.us.auth0.com/",
+  tokenSigningAlg: "RS256",
 });
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
-
-app.get('/authorized', function (req, res) {
-    res.send('Secured Resource');
+  ssl: { rejectUnauthorized: false },
 });
 
 const createTablesQuery = `
@@ -30,7 +29,6 @@ const createTablesQuery = `
     auth0_id VARCHAR(255) PRIMARY KEY,
     email VARCHAR(255)
   );
-
   CREATE TABLE IF NOT EXISTS pets (
       id SERIAL PRIMARY KEY,
       user_id VARCHAR(255),
@@ -38,29 +36,79 @@ const createTablesQuery = `
       pet_name VARCHAR(255)
   );
 `;
-
 pool.query(createTablesQuery);
 
-app.get('/api/my-pets', jwtCheck , async (req, res) => {
+app.get("/authorized", function (req, res) {
+  res.send("Secured Resource");
+});
+
+const haHeaders = () => ({
+  Authorization: `Bearer ${HA_TOKEN}`,
+  "Content-Type": "application/json",
+});
+
+app.get("/api/states/:entityId", async (req, res) => {
+  try {
+    const r = await fetch(`${HA_URL}/api/states/${req.params.entityId}`, {
+      headers: haHeaders(),
+    });
+    if (!r.ok) return res.status(r.status).json({ error: "HA error" });
+    res.json(await r.json());
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/api/states/:entityId", async (req, res) => {
+  try {
+    const r = await fetch(`${HA_URL}/api/states/${req.params.entityId}`, {
+      method: "POST",
+      headers: haHeaders(),
+      body: JSON.stringify(req.body),
+    });
+    res.status(r.ok ? 200 : r.status).json({ ok: r.ok });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/api/services/:domain/:service", async (req, res) => {
+  try {
+    const r = await fetch(
+      `${HA_URL}/api/services/${req.params.domain}/${req.params.service}`,
+      {
+        method: "POST",
+        headers: haHeaders(),
+        body: JSON.stringify(req.body),
+      },
+    );
+    res.status(r.ok ? 200 : r.status).json({ ok: r.ok });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/api/my-pets", jwtCheck, async (req, res) => {
   const auth0Id = req.auth.payload.sub;
   try {
-    const result = await pool.query('SELECT * FROM pets WHERE user_id = $1', [auth0Id]);
+    const result = await pool.query("SELECT * FROM pets WHERE user_id = $1", [
+      auth0Id,
+    ]);
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-app.post('/api/add-pet', jwtCheck, async (req, res) => {
+app.post("/api/add-pet", jwtCheck, async (req, res) => {
   try {
     await pool.query(
-      'INSERT INTO users (auth0_id) VALUES ($1) ON CONFLICT (auth0_id) DO NOTHING',
-      [req.auth.payload.sub]
+      "INSERT INTO users (auth0_id) VALUES ($1) ON CONFLICT (auth0_id) DO NOTHING",
+      [req.auth.payload.sub],
     );
-
-    const result = await pool.query(
-      'INSERT INTO pets (user_id, pet_id, pet_name) VALUES ($1, $2, $3) RETURNING *',
-      [req.auth.payload.sub, req.body.pet_id, req.body.pet_name]
+    await pool.query(
+      "INSERT INTO pets (user_id, pet_id, pet_name) VALUES ($1, $2, $3)",
+      [req.auth.payload.sub, req.body.pet_id, req.body.pet_name],
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -69,5 +117,4 @@ app.post('/api/add-pet', jwtCheck, async (req, res) => {
 });
 
 app.listen(port);
-
-console.log('Running on port ', port);
+console.log("Running on port ", port);

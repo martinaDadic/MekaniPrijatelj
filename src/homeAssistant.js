@@ -1,17 +1,19 @@
 const HA_TOKEN = import.meta.env.VITE_HA_TOKEN
-const HA_URL = import.meta.env.VITE_HA_URL ?? '' 
 
 const headers = {
   'Authorization': `Bearer ${HA_TOKEN}`,
   'Content-Type': 'application/json',
 }
 
-const ENTITY_ACTIVATED = 'input_boolean.medvjedic_aktivan'
-const ENTITY_HAPPINESS = 'counter.razina_srece'
-const ENTITY_NAME = 'input_text.toyname'
+const ENTITY_HAPPINESS = 'input_number.razina_srece'
+const ENTITY_NAME      = 'input_text.ime_medvjedica'
+
+const BASE = import.meta.env.DEV
+  ? ''
+  : (import.meta.env.VITE_BACKEND_URL ?? 'https://mekaniprijateljweb.onrender.com')
 
 export async function getState(entityId) {
-  const res = await fetch(`${HA_URL}/api/states/${entityId}`, { headers })
+  const res = await fetch(`${BASE}/api/states/${entityId}`, { headers })
   if (!res.ok) return null
   
   const contentType = res.headers.get('content-type')
@@ -23,7 +25,7 @@ export async function getState(entityId) {
 }
 
 export async function setState(entityId, state, attributes = {}) {
-  const res = await fetch(`${HA_URL}/api/states/${entityId}`, {
+  const res = await fetch(`${BASE}/api/states/${entityId}`, {
     method: 'POST',
     headers,
     body: JSON.stringify({ state, attributes }),
@@ -32,7 +34,7 @@ export async function setState(entityId, state, attributes = {}) {
 }
 
 export async function callService(domain, service, data) {
-  const res = await fetch(`${HA_URL}/api/services/${domain}/${service}`, {
+  const res = await fetch(`${BASE}/api/services/${domain}/${service}`, {
     method: 'POST',
     headers,
     body: JSON.stringify(data),
@@ -45,14 +47,19 @@ export async function getPlushieHappiness() {
   return s ? Math.round(parseFloat(s.state)) : null
 }
 
+export async function setPlushieHappiness(value) {
+  return callService('input_number', 'set_value', {
+    entity_id: ENTITY_HAPPINESS,
+    value,
+  })
+}
+
 export async function getPlushieName() {
   const s = await getState(ENTITY_NAME)
   return s ? s.state : null
 }
 
 export async function setPlushieName(name) {
-  await setState(ENTITY_ACTIVATED, 'on')
-
   return callService('input_text', 'set_value', {
     entity_id: ENTITY_NAME,
     value: name,
