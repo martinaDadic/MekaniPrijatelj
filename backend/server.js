@@ -5,7 +5,16 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://mekaniprijateljweb.onrender.com',
+    'https://mekaniprijatelj.onrender.com',
+    'http://localhost:5173' 
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 const port = process.env.PORT || 8080;
