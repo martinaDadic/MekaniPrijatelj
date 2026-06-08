@@ -1,4 +1,5 @@
 const HA_TOKEN = import.meta.env.VITE_HA_TOKEN
+const HA_URL = import.meta.env.VITE_HA_URL ?? '' 
 
 const headers = {
   'Authorization': `Bearer ${HA_TOKEN}`,
