@@ -14,7 +14,7 @@
     <h1>Tvoji ljubimci: </h1>
       <div v-for="pet in myPets" :key="pet.id">
         <p>Ime: {{ pet.pet_name }}</p>
-        <RouterLink :to="`/ljubimac/${pet.pet_id}`">Početna stranica</RouterLink>
+        <RouterLink :to="`/ljubimac/${pet.pet_id}`">Pogledaj stanje</RouterLink>
     </div>
 
 </template>
