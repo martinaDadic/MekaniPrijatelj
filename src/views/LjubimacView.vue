@@ -34,7 +34,7 @@ export default {
   setup() {
     const { isAuthenticated, getAccessTokenSilently} = useAuth0();
     return {isAuthenticated, getAccessTokenSilently};
-  }
+  },
   methods: {
     pricaj(){
         alert("YO!");
@@ -57,9 +57,9 @@ export default {
           if (response.ok) {
             alert('Uspješno dodan ljubimac!');
             this.myPets.push({
-              pet_id: petId,
-              pet_name: this.imeLjubimca
-        });
+                pet_id: petId,
+                pet_name: this.imeLjubimca
+            });
           }
         } catch (error) {
           console.error("Error:", error);
