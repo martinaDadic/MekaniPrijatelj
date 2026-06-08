@@ -8,7 +8,7 @@
     <button @click="increaseHealth">+1</button>
     <br>
     <button @click="pricaj">pricaj!</button>
-    <button v-if="isAuthenticated" @click="addPet">Dodaj ljubimca!</button>
+    <button v-if="isAuthenticated && !myPets.some(pet => pet.pet_id === $route.params.id)" @click="addPet">Dodaj ljubimca!</button>
 </template>
 
 <script>
@@ -53,6 +53,10 @@ export default {
 
           if (response.ok) {
             alert('Uspješno dodan ljubimac!');
+            this.myPets.push({
+              pet_id: petId,
+              pet_name: this.imeLjubimca
+        });
           }
         } catch (error) {
           console.error("Error:", error);
