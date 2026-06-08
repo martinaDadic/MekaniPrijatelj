@@ -41,7 +41,7 @@ const createTablesQuery = `
 
 pool.query(createTablesQuery);
 
-app.get('/api/my-pets', checkJwt, async (req, res) => {
+app.get('/api/my-pets', jwtCheck , async (req, res) => {
   const auth0Id = req.auth.payload.sub;
   try {
     const result = await pool.query('SELECT * FROM pets WHERE user_id = $1', [auth0Id]);
@@ -51,7 +51,7 @@ app.get('/api/my-pets', checkJwt, async (req, res) => {
   }
 });
 
-app.post('/api/add-pet', checkJwt, async (req, res) => {
+app.post('/api/add-pet', jwtCheck, async (req, res) => {
   try {
     await pool.query(
       'INSERT INTO users (auth0_id) VALUES ($1) ON CONFLICT (auth0_id) DO NOTHING',
