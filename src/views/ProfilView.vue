@@ -45,7 +45,7 @@ export default {
   async mounted() {
     if (this.isAuthenticated) {
       const token = await this.getAccessTokenSilently();
-      const response = await fetch('https://mekaniprijatelj.onrender.com/api/my-pets', {
+      const response = await fetch('https://mekaniprijateljweb.onrender.com/api/my-pets', {
         headers: { Authorization: `Bearer ${token}` }
       });
       this.myPets = await response.json();
