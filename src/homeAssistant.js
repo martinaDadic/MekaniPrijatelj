@@ -8,9 +8,7 @@ const headers = {
 const ENTITY_HAPPINESS = 'counter.razina_srece'
 const ENTITY_NAME = 'input_text.toyname'
 
-const BASE = import.meta.env.DEV
-  ? ''
-  : (import.meta.env.VITE_BACKEND_URL ?? 'https://mekaniprijateljweb.onrender.com')
+const BASE = 'http://homeassistant.local/8123'
 
 export async function getState(entityId) {
   const res = await fetch(`${BASE}/api/states/${entityId}`, { headers })
