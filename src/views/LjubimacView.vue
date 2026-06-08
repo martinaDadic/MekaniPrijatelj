@@ -1,11 +1,8 @@
 <template>
-    <h1> Ljubimac {{ imeLjubimca }} </h1>
+    <h1> Ljubimac {{ name }} </h1>
     <p>pozdrav bando, mazite me!!</p>
     <img src="/images/medo.png" width="10%" />
-    <img :src="`/images/healthBar${health}.png`" />
-    <br>
-    <button @click="decreaseHealth">-1</button>
-    <button @click="increaseHealth">+1</button>
+    <img :src="`/images/healthBar${happiness}.png`" />
     <br>
     <button @click="pricaj">pricaj!</button>
     <button v-if="isAuthenticated && !myPets.some(pet => pet.pet_id === $route.params.id)" @click="addPet">Dodaj ljubimca!</button>
@@ -13,26 +10,32 @@
 
 <script>
 import { useAuth0 } from '@auth0/auth0-vue';
+import {
+  getPlushieName,
+  getPlushieHappiness,
+  setPlushieName,
+  setPlushieHappiness,
+} from "../homeAssistant.js";
 
 export default {
   data() {
     return {
-      health: 2,
       imeLjubimca: 'Pero',
-      myPets: []
+      myPets: [],
+      loading: true,
+      found: false,
+      name: "",
+      happiness: 3,
+      editingName: false,
+      tempName: "",
+      nameStatus: null,
     }
   },
   setup() {
     const { isAuthenticated, getAccessTokenSilently} = useAuth0();
     return {isAuthenticated, getAccessTokenSilently};
-  },
+  }
   methods: {
-    decreaseHealth() {
-      if (this.health > 0) this.health--;
-    },
-    increaseHealth() {
-      if (this.health < 2) this.health++;
-    },
     pricaj(){
         alert("YO!");
     },
@@ -64,6 +67,21 @@ export default {
       }else{
         alert("Ovaj ljubimac je već dodan!");
       }
+    },
+    async loadPlushie() {
+      this.loading = true;
+      const [name, happiness] = await Promise.all([
+        getPlushieName(),
+        getPlushieHappiness(),
+      ]);
+      if (name !== null) {
+        this.found = true;
+        this.name = name;
+        this.happiness = happiness ?? 3;
+      } else {
+        this.found = false;
+      }
+      this.loading = false;
     }
   },
   async mounted() {
@@ -78,6 +96,7 @@ export default {
         console.error("Greška pri dohvaćanju ljubimaca:", error);
       }
     }
+    this.loadPlushie();
   }
 }
 </script>
