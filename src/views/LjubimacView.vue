@@ -14,7 +14,6 @@ import {
   getPlushieName,
   getPlushieHappiness,
   setPlushieName,
-  setPlushieHappiness,
 } from "../homeAssistant.js";
 
 export default {
