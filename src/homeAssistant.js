@@ -11,13 +11,13 @@ const ENTITY_HAPPINESS = 'counter.razina_srece'
 const ENTITY_NAME = 'input_text.toyname'
 
 export async function getState(entityId) {
-  const res = await fetch(`/api/states/${entityId}`, { headers })
+  const res = await fetch(`${HA_URL}/api/states/${entityId}`, { headers })
   if (!res.ok) return null
   return res.json()
 }
 
 export async function setState(entityId, state, attributes = {}) {
-  const res = await fetch(`/api/states/${entityId}`, {
+  const res = await fetch(`${HA_URL}/api/states/${entityId}`, {
     method: 'POST',
     headers,
     body: JSON.stringify({ state, attributes }),
@@ -26,7 +26,7 @@ export async function setState(entityId, state, attributes = {}) {
 }
 
 export async function callService(domain, service, data) {
-  const res = await fetch(`/api/services/${domain}/${service}`, {
+  const res = await fetch(`${HA_URL}/api/services/${domain}/${service}`, {
     method: 'POST',
     headers,
     body: JSON.stringify(data),
