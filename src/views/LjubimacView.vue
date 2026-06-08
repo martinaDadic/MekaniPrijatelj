@@ -17,7 +17,7 @@ import { useAuth0 } from '@auth0/auth0-vue';
 export default {
   data() {
     return {
-      health: 10,
+      health: 2,
       imeLjubimca: 'Pero',
       myPets: []
     }
@@ -31,7 +31,7 @@ export default {
       if (this.health > 0) this.health--;
     },
     increaseHealth() {
-      if (this.health < 10) this.health++;
+      if (this.health < 2) this.health++;
     },
     pricaj(){
         alert("YO!");
