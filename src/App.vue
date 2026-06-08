@@ -41,10 +41,18 @@ const {
   user
 } = useAuth0()
 
-const signup = () =>
-  loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
+const login = () => loginWithRedirect({
+  authorizationParams: {
+    audience: 'https://mekaniprijatelj-api'
+  }
+})
 
-const login = () => loginWithRedirect()
+const signup = () => loginWithRedirect({
+  authorizationParams: {
+    screen_hint: 'signup',
+    audience: 'https://mekaniprijatelj-api' // Dodaj i ovdje za svaki slučaj!
+  }
+})
 
 const logout = () =>
   auth0Logout({ logoutParams: { returnTo: window.location.origin } })
