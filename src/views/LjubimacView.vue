@@ -40,7 +40,7 @@ export default {
         const token = await this.getAccessTokenSilently();
         const petId = this.$route.params.id;
 
-        const response = await fetch('https://mekaniprijateljweb.onrender.com/api/my-pets', {
+        const response = await fetch('https://mekaniprijateljweb.onrender.com/api/add-pet', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
