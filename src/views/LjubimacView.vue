@@ -51,10 +51,8 @@ export default {
     async loadPlushie() {
       this.loading = true;
       try {
-        const [name, happiness] = await Promise.all([
-          getPlushieName(),
-          getPlushieHappiness(),
-        ]);
+        this.name= await getPlushieName();
+        this.happiness= await getPlushieHappiness();
         if (name !== null) {
           this.found = true;
           this.name = name;
