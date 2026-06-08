@@ -4,13 +4,11 @@
       <div class="spinner"></div>
       <p>Učitavam ljubimca...</p>
     </div>
-
     <div v-else-if="!found" class="card not-found">
       <h3>Ljubimac nije pronađen</h3>
     </div>
-
     <div v-else class="card happiness-card">
-      <h3>Sreća</h3>
+      <h3>{{ name }}</h3>
       <img
         :src="`/images/healthBar${happiness}.png`"
         class="happiness-bar"
@@ -29,6 +27,7 @@ export default {
     return {
       loading: true,
       found: false,
+      name: "",
       happiness: 3,
     };
   },
@@ -44,6 +43,7 @@ export default {
       ]);
       if (name !== null) {
         this.found = true;
+        this.name = name;
         this.happiness = happiness ?? 3;
       } else {
         this.found = false;
