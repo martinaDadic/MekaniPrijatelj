@@ -13,6 +13,12 @@ const ENTITY_NAME = 'input_text.toyname'
 export async function getState(entityId) {
   const res = await fetch(`${HA_URL}/api/states/${entityId}`, { headers })
   if (!res.ok) return null
+  
+  const contentType = res.headers.get('content-type')
+  if (!contentType || !contentType.includes('application/json')) {
+    return null
+  }
+  
   return res.json()
 }
 

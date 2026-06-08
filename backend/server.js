@@ -58,11 +58,11 @@ app.post('/api/add-pet', jwtCheck, async (req, res) => {
       [req.auth.payload.sub]
     );
 
-    await pool.query(
-      'INSERT INTO pets (user_id, pet_id, pet_name) VALUES ($1, $2, $3)',
+    const result = await pool.query(
+      'INSERT INTO pets (user_id, pet_id, pet_name) VALUES ($1, $2, $3) RETURNING *',
       [req.auth.payload.sub, req.body.pet_id, req.body.pet_name]
     );
-    res.sendStatus(201);
+    res.status(201).json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
