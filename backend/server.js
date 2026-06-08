@@ -34,7 +34,7 @@ const createTablesQuery = `
   CREATE TABLE IF NOT EXISTS pets (
       id SERIAL PRIMARY KEY,
       user_id VARCHAR(255),
-      pet_id VARCHAR(255),
+      pet_id VARCHAR(255) UNIQUE NOT NULL,
       pet_name VARCHAR(255)
   );
 `;

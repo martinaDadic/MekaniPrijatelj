@@ -25,7 +25,6 @@ import { RouterLink } from 'vue-router'
 
 export default {
   setup() {
-    // SVE iz Auth0 mora biti unutar setup()
     const { isAuthenticated, getAccessTokenSilently, user, logout: auth0Logout } = useAuth0();
     
     const logout = () =>

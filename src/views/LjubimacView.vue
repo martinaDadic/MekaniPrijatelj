@@ -18,7 +18,8 @@ export default {
   data() {
     return {
       health: 10,
-      imeLjubimca: 'Pero'
+      imeLjubimca: 'Pero',
+      myPets: []
     }
   },
   setup() {
@@ -36,24 +37,41 @@ export default {
         alert("YO!");
     },
     async addPet(){
+      if (!this.myPets.some(pet => pet.pet_id === this.$route.params.id)) {
+        try {
+          const token = await this.getAccessTokenSilently();
+          const petId = this.$route.params.id;
+
+          const response = await fetch('https://mekaniprijateljweb.onrender.com/api/add-pet', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ pet_id: petId, pet_name: this.imeLjubimca })
+          });
+
+          if (response.ok) {
+            alert('Uspješno dodan ljubimac!');
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }else{
+        alert("Ovaj ljubimac je već dodan!");
+      }
+    }
+  },
+  async mounted() {
+    if (this.isAuthenticated) {
       try {
         const token = await this.getAccessTokenSilently();
-        const petId = this.$route.params.id;
-
-        const response = await fetch('https://mekaniprijateljweb.onrender.com/api/add-pet', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ pet_id: petId, pet_name: this.imeLjubimca })
+        const response = await fetch('https://mekaniprijateljweb.onrender.com/api/my-pets', {
+          headers: { Authorization: `Bearer ${token}` }
         });
-
-        if (response.ok) {
-          alert('Uspješno dodan ljubimac!');
-        }
+        this.myPets = await response.json();
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Greška pri dohvaćanju ljubimaca:", error);
       }
     }
   }
