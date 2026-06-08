@@ -9,7 +9,7 @@
 
   </div>
 
-  <div v-else-if="isAuthenticated && user">
+  <div v-if="isAuthenticated && user">
     <p>Logged in as {{ user.email }}</p>
     <RouterLink to="/">Moj profil</RouterLink>
 
