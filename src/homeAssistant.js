@@ -1,71 +1,95 @@
-const HA_TOKEN = import.meta.env.VITE_HA_TOKEN
+const HA_TOKEN = import.meta.env.VITE_HA_TOKEN;
 
 const headers = {
-  'Authorization': `Bearer ${HA_TOKEN}`,
-  'Content-Type': 'application/json',
-}
+  Authorization: `Bearer ${HA_TOKEN}`,
+  "Content-Type": "application/json",
+};
 
-const ENTITY_HAPPINESS = 'counter.razina_srece'
-const ENTITY_NAME = 'input_text.toyname'
+const ENTITY_HAPPINESS = "counter.razina_srece";
+const ENTITY_NAME = "input_text.toyname";
 
-const BASE = 'https://mekaniprijateljweb.onrender.com'
+const BASE = "http://homeassistant.local:8123";
 
 export async function getState(entityId) {
-  const res = await fetch(`${BASE}/api/states/${entityId}`, { headers })
-  if (!res.ok) return null
-  
-  const contentType = res.headers.get('content-type')
-  if (!contentType || !contentType.includes('application/json')) {
-    return null
+  const res = await fetch(`/api/states/${entityId}`, {
+    headers,
+    cache: "no-store",
+  });
+  if (!res.ok) return null;
+
+  const contentType = res.headers.get("content-type");
+  if (!contentType || !contentType.includes("application/json")) {
+    return null;
   }
-  
-  return res.json()
+
+  return res.json();
 }
 
 export async function setState(entityId, state, attributes = {}) {
-  const res = await fetch(`${BASE}/api/states/${entityId}`, {
-    method: 'POST',
+  const res = await fetch(`/api/states/${entityId}`, {
+    method: "POST",
     headers,
     body: JSON.stringify({ state, attributes }),
-  })
-  return res.ok
+  });
+  console.log("VIC");
+
+  // LOG: Ispisujemo status da vidimo je li 200 OK, 404, 401 itd.
+  console.log(`Dohvaćam ${entityId} - Status:`, res.status);
+
+  if (!res.ok) {
+    console.warn(`Greška! Status nije OK za ${entityId}`);
+    return null;
+  }
+
+  const contentType = res.headers.get("content-type");
+  if (!contentType || !contentType.includes("application/json")) {
+    console.warn(`Greška! Content-Type nije JSON za ${entityId}:`, contentType);
+    return null;
+  }
+
+  const data = await res.json();
+  // LOG: Ispisujemo točne podatke koje nam Home Assistant šalje
+  console.log(`Podaci za ${entityId}:`, data);
+
+  return data;
+  return res.ok;
 }
 
 export async function callService(domain, service, data) {
-  const res = await fetch(`${BASE}/api/services/${domain}/${service}`, {
-    method: 'POST',
+  const res = await fetch(`/api/services/${domain}/${service}`, {
+    method: "POST",
     headers,
     body: JSON.stringify(data),
-  })
-  return res.ok
+  });
+  return res.ok;
 }
 
 export async function getPlushieHappiness() {
-  const s = await getState(ENTITY_HAPPINESS)
-  return s ? Math.round(parseFloat(s.state)) : null
+  const s = await getState(ENTITY_HAPPINESS);
+  return s ? Math.round(parseFloat(s.state)) : null;
 }
 
 export async function setPlushieHappiness(value) {
-  return callService('input_number', 'set_value', {
+  return callService("input_number", "set_value", {
     entity_id: ENTITY_HAPPINESS,
     value,
-  })
+  });
 }
 
 export async function getPlushieName() {
-  const s = await getState(ENTITY_NAME)
-  return s ? s.state : null
+  const s = await getState(ENTITY_NAME);
+  return s ? s.state : null;
 }
 
 export async function setPlushieName(name) {
-  return callService('input_text', 'set_value', {
+  return callService("input_text", "set_value", {
     entity_id: ENTITY_NAME,
     value: name,
-  })
+  });
 }
 
 export async function createPlushie(name) {
-  await setState(ENTITY_NAME, name)
-  await setState(ENTITY_HAPPINESS, '3')
-  return true
+  await setState(ENTITY_NAME, name);
+  await setState(ENTITY_HAPPINESS, "3");
+  return true;
 }
