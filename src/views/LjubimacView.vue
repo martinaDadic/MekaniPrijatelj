@@ -12,7 +12,7 @@
       <img src="/images/medo.png" width="10%" />
       <img :src="`/images/healthBar${happiness}.png`" />
       <br />
-      <button @click="pricaj">pricaj!</button>
+      <button @click="pricaj">Reci trenutno stanje sreće!</button>
       <button
         v-if="isAuthenticated && !myPets.some(pet => pet.pet_id === $route.params.id)"
         @click="addPet"
@@ -25,7 +25,7 @@
 
 <script>
 import { useAuth0 } from '@auth0/auth0-vue';
-import { getPlushieName, getPlushieHappiness } from '../homeAssistant.js';
+import { getPlushieName, getPlushieHappiness, playSound } from '../homeAssistant.js';
 
 export default {
   setup() {
@@ -80,8 +80,8 @@ export default {
         console.error('Greška pri dohvaćanju ljubimaca:', err);
       }
     },
-    pricaj() {
-      alert(`${this.name} kaže: Mjau!`);
+    async pricaj() {
+      await playSound(this.happiness);
     },
     async addPet() {
       try {
