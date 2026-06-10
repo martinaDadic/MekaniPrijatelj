@@ -1,4 +1,5 @@
 const HA_TOKEN = import.meta.env.VITE_HA_TOKEN;
+const HA_BASE = 'http://homeassistant.local:8123';
 
 const headers = {
   Authorization: `Bearer ${HA_TOKEN}`,
@@ -9,8 +10,8 @@ const ENTITY_HAPPINESS = "counter.razina_srece";
 const ENTITY_NAME = "input_text.toyname";
 const ENTITY_SOUND = "input_number.zvucnik";
 
-/* export async function getState(entityId) {
-  const res = await fetch(`/api/states/${entityId}`, {
+export async function getState(entityId) {
+  const res = await fetch(`${HA_BASE}/api/states/${entityId}`, {
     headers,
     cache: "no-store",
   });
@@ -40,7 +41,7 @@ export async function getState(entityId) {
 }
 
 export async function setState(entityId, state, attributes = {}) {
-  const res = await fetch(`/api/states/${entityId}`, {
+  const res = await fetch(`${HA_BASE}/api/states/${entityId}`, {
     method: "POST",
     headers,
     body: JSON.stringify({ state, attributes }),
@@ -70,7 +71,7 @@ export async function setState(entityId, state, attributes = {}) {
 }
 
 export async function callService(domain, service, data) {
-  const res = await fetch(`/api/services/${domain}/${service}`, {
+  const res = await fetch(`${HA_BASE}/api/services/${domain}/${service}`, {
     method: "POST",
     headers,
     body: JSON.stringify(data),
