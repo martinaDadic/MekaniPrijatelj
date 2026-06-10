@@ -166,6 +166,7 @@ export default {
         if (response.ok) {
           const added = await response.json();
           this.myPets.push(added);
+          Console.Log("Uspjeh!");
         }
       } catch (err) {
         console.error('Greška pri dodavanju ljubimca:', err);
