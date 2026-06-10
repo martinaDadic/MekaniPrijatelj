@@ -99,7 +99,6 @@ export async function playSound(id, happiness) {
 }
 
 export async function activatePlushie() {
-  console.log("metoda a");
   return callService("input_boolean", "turn_on", {
     entity_id: ENTITY_ACTIVATION,
   });
