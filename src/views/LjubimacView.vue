@@ -45,7 +45,7 @@
           Reci trenutno stanje sreće!
         </button>
         <button
-          v-if="isAuthenticated && !myPets.some(pet => pet.pet_id === $route.params.id)"
+          v-if="isAuthenticated && !petsLoading && !myPets.some(pet => pet.pet_id === $route.params.id)"
           @click="addPet"
           class="flex-1 max-w-xs bg-white text-pink-600 border-2 border-pink-400 py-3 px-6 rounded-2xl font-bold hover:bg-pink-50 transition-colors shadow-sm"
         >
@@ -59,9 +59,6 @@
 <script>
 import { useAuth0 } from '@auth0/auth0-vue';
 import { getPlushieName, getPlushieHappiness, playSound, setPlushieName, activatePlushie } from '../homeAssistant.js';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
 
 export default {
   setup() {
@@ -71,6 +68,7 @@ export default {
   data() {
     return {
       loading: true,
+      petsLoading: true,
       found: false,
       name: '',
       happiness: 3,
@@ -81,7 +79,7 @@ export default {
   },
   async mounted() {
     if (this.$route.path.endsWith('/activate')) {
-      await activate();
+      await this.activate();
     }
     await this.loadPlushie();
     if (this.isAuthenticated) {
@@ -121,18 +119,34 @@ export default {
       this.editingName = false;
     },
     async activate() {
-      await activatePlushie();
-      router.push({ name: 'ljubimac', params: { id: 1 }})
+      await activatePlushie(); 
+      
+      this.$router.push({ 
+        name: 'ljubimac', 
+        params: { id: this.$route.params.id } 
+      });
     },
     async loadMyPets() {
+      this.petsLoading = true;
+
       try {
         const token = await this.getAccessTokenSilently();
-        const response = await fetch('https://mekaniprijateljweb.onrender.com/api/my-pets', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+
+        const response = await fetch(
+          'https://mekaniprijateljweb.onrender.com/api/my-pets',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
         this.myPets = await response.json();
+
       } catch (err) {
-        console.error('Greška pri dohvaćanju ljubimaca:', err);
+        console.error(err);
+      } finally {
+        this.petsLoading = false;
       }
     },
     async pricaj() {
