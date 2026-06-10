@@ -23,21 +23,6 @@ export async function getState(entityId) {
   }
 
   return res.json();
-} */
-
-export async function getState(entityId) {
-  const res = await fetch(`/api/states/${entityId}`, {
-    headers,
-    cache: "no-store",
-  });
-
-  console.log("STATUS:", res.status);
-  console.log("CONTENT TYPE:", res.headers.get("content-type"));
-
-  const text = await res.text();
-  console.log("RESPONSE:", text);
-
-  return null;
 }
 
 export async function setState(entityId, state, attributes = {}) {
