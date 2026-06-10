@@ -59,9 +59,6 @@
 <script>
 import { useAuth0 } from '@auth0/auth0-vue';
 import { getPlushieName, getPlushieHappiness, playSound, setPlushieName, activatePlushie } from '../homeAssistant.js';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
 
 export default {
   setup() {
@@ -81,7 +78,7 @@ export default {
   },
   async mounted() {
     if (this.$route.path.endsWith('/activate')) {
-      await activate();
+      await this.activate();
     }
     await this.loadPlushie();
     if (this.isAuthenticated) {
@@ -121,8 +118,12 @@ export default {
       this.editingName = false;
     },
     async activate() {
-      await activatePlushie();
-      router.push({ name: 'ljubimac', params: { id: 1 }})
+      await activatePlushie(); 
+      
+      this.$router.push({ 
+        name: 'ljubimac', 
+        params: { id: this.$route.params.id } 
+      });
     },
     async loadMyPets() {
       try {
