@@ -87,9 +87,6 @@ export async function playSound(happiness){
   });
 }
 
-export async function activatePlushie(){
-    return callService("input_boolean", "set_value", {
-    entity_id: ENTITY_ACTIVATION,
-    value: "on",
-  });
+export async function activatePlushie() {
+  return setState(ENTITY_ACTIVATION, "on");
 }
