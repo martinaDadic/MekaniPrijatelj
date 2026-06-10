@@ -7,6 +7,7 @@ const headers = {
 const ENTITY_HAPPINESS = "counter.razina_srece";
 const ENTITY_NAME = "input_text.toyname";
 const ENTITY_SOUND = "input_number.zvucnik";
+const ENTITY_ACTIVATION = "input_boolean.medvjedic_aktivan";
 
 export async function getState(entityId) {
   const res = await fetch(`${HA_BASE}/api/states/${entityId}`, {
@@ -79,15 +80,16 @@ export async function setPlushieName(name) {
   });
 }
 
-export async function createPlushie(name) {
-  await setState(ENTITY_NAME, name);
-  await setState(ENTITY_HAPPINESS, "3");
-  return true;
-}
-
 export async function playSound(happiness){
   return callService("input_number", "set_value", {
     entity_id: ENTITY_SOUND,
     value: happiness,
+  });
+}
+
+export async function activatePlushie(){
+  return callService("input_boolean", "set_value", {
+    entity_id: ENTITY_ACTIVATION,
+    value: "on",
   });
 }

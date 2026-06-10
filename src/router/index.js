@@ -17,6 +17,15 @@ const router = createRouter({
       component: LjubimacView,
     },
     {
+      path: '/ljubimac/:id/activate',
+      name: 'ljubimac-activate',
+      component: LjubimacView,
+        beforeEnter: async () => {
+        await activatePlushie()
+        return true
+      },
+    },
+    {
       path: '/profil',
       name: 'profil',
       component: ProfilView,
