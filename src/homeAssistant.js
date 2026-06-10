@@ -90,5 +90,6 @@ export async function playSound(happiness){
 export async function activatePlushie(){
   return callService("input_boolean", "turn_on", {
     entity_id: ENTITY_ACTIVATION,
+    value: "on",
   });
 }
