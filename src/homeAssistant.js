@@ -24,36 +24,6 @@ export async function getState(entityId) {
   return res.json();
 }
 
-export async function setState(entityId, state, attributes = {}) {
-  const res = await fetch(`${HA_BASE}/api/states/${entityId}`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ state, attributes }),
-  });
-  console.log("VIC");
-
-  // LOG: Ispisujemo status da vidimo je li 200 OK, 404, 401 itd.
-  console.log(`Dohvaćam ${entityId} - Status:`, res.status);
-
-  if (!res.ok) {
-    console.warn(`Greška! Status nije OK za ${entityId}`);
-    return null;
-  }
-
-  const contentType = res.headers.get("content-type");
-  if (!contentType || !contentType.includes("application/json")) {
-    console.warn(`Greška! Content-Type nije JSON za ${entityId}:`, contentType);
-    return null;
-  }
-
-  const data = await res.json();
-  // LOG: Ispisujemo točne podatke koje nam Home Assistant šalje
-  console.log(`Podaci za ${entityId}:`, data);
-
-  return data;
-  return res.ok;
-}
-
 export async function callService(domain, service, data) {
   const res = await fetch(`${HA_BASE}/api/services/${domain}/${service}`, {
     method: "POST",
@@ -88,12 +58,8 @@ export async function playSound(happiness){
 }
 
 export async function activatePlushie() {
-  // return setState(ENTITY_ACTIVATION, "on");
-  const res = await fetch(`${HA_BASE}/api/states/${ENTITY_ACTIVATION}`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ value: "on" }), 
+  callService("input_boolean", "set_value", {
+    entity_id: ENTITY_ACTIVATION,
+    value: "on"
   });
-  
-  return res.ok;
 }
