@@ -12,6 +12,14 @@
       <img src="/images/medo.png" width="10%" />
       <img :src="`/images/healthBar${happiness}.png`" />
       <br />
+      <div v-if="editingName">
+        <input v-model="newName" />
+        <button @click="saveName">Spremi</button>
+        <button @click="editingName = false">Odustani</button>
+      </div>
+      <div v-else>
+        <button @click="startEditName">Promijeni ime</button>
+      </div>
       <button @click="pricaj">Reci trenutno stanje sreće!</button>
       <button
         v-if="isAuthenticated && !myPets.some(pet => pet.pet_id === $route.params.id)"
@@ -25,7 +33,7 @@
 
 <script>
 import { useAuth0 } from '@auth0/auth0-vue';
-import { getPlushieName, getPlushieHappiness, playSound } from '../homeAssistant.js';
+import { getPlushieName, getPlushieHappiness, playSound, setPlushieName } from '../homeAssistant.js';
 
 export default {
   setup() {
@@ -39,6 +47,8 @@ export default {
       name: '',
       happiness: 3,
       myPets: [],
+      editingName: false,
+      newName: '',
     };
   },
   async mounted() {
@@ -68,6 +78,16 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    startEditName() {
+      this.newName = this.name;
+      this.editingName = true;
+    },
+    async saveName() {
+      if (!this.newName.trim()) return;
+      await setPlushieName(this.newName.trim());
+      this.name = this.newName.trim();
+      this.editingName = false;
     },
     async loadMyPets() {
       try {

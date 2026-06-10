@@ -67,13 +67,6 @@ export async function getPlushieHappiness() {
   return s ? Math.round(parseFloat(s.state)) : null;
 }
 
-export async function setPlushieHappiness(value) {
-  return callService("input_number", "set_value", {
-    entity_id: ENTITY_HAPPINESS,
-    value,
-  });
-}
-
 export async function getPlushieName() {
   const s = await getState(ENTITY_NAME);
   return s ? s.state : null;
