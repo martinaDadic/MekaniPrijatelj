@@ -17,6 +17,8 @@ const V_ENTITY_ACTIVATION = "input_boolean.v_medvjedic_aktivan";
 
 
 function getBearEntities(id) {
+  id = Number(id);
+
   if (id === 1) {
     return {
       happiness: V_ENTITY_HAPPINESS,
@@ -99,7 +101,6 @@ export async function playSound(id, happiness) {
 }
 
 export async function activatePlushie() {
-  console.log("metoda a");
   return callService("input_boolean", "turn_on", {
     entity_id: ENTITY_ACTIVATION,
   });
