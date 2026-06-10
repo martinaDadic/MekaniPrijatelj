@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://172.20.10.11:8123',
+        target: 'https://myndcicsudpm1rggzebe2oy5qtkskvtx.ui.nabu.casa',
         changeOrigin: true,
         secure: false,
       }
