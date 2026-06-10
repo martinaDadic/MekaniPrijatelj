@@ -1,5 +1,5 @@
 const HA_TOKEN = import.meta.env.VITE_HA_TOKEN;
-const HA_BASE = 'https://myndcicsudpm1rggzebe2oy5qtkskvtx.ui.nabu.casa/';
+const HA_BASE = 'https://myndcicsudpm1rggzebe2oy5qtkskvtx.ui.nabu.casa';
 
 const headers = {
   Authorization: `Bearer ${HA_TOKEN}`,
