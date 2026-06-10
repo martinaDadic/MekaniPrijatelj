@@ -9,7 +9,7 @@ const ENTITY_HAPPINESS = "counter.razina_srece";
 const ENTITY_NAME = "input_text.toyname";
 const ENTITY_SOUND = "input_number.zvucnik";
 
-export async function getState(entityId) {
+/* export async function getState(entityId) {
   const res = await fetch(`/api/states/${entityId}`, {
     headers,
     cache: "no-store",
@@ -22,6 +22,21 @@ export async function getState(entityId) {
   }
 
   return res.json();
+} */
+
+export async function getState(entityId) {
+  const res = await fetch(`/api/states/${entityId}`, {
+    headers,
+    cache: "no-store",
+  });
+
+  console.log("STATUS:", res.status);
+  console.log("CONTENT TYPE:", res.headers.get("content-type"));
+
+  const text = await res.text();
+  console.log("RESPONSE:", text);
+
+  return null;
 }
 
 export async function setState(entityId, state, attributes = {}) {
