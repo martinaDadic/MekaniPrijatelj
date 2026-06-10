@@ -1,4 +1,5 @@
-const HA_BASE = import.meta.env.VITE_BACKEND_URL || 'https://mekaniprijatelj.onrender.com';
+const HA_BASE =
+  import.meta.env.VITE_BACKEND_URL || "https://mekaniprijatelj.onrender.com";
 
 const headers = {
   "Content-Type": "application/json",
@@ -50,7 +51,7 @@ export async function setPlushieName(name) {
   });
 }
 
-export async function playSound(happiness){
+export async function playSound(happiness) {
   return callService("input_number", "set_value", {
     entity_id: ENTITY_SOUND,
     value: happiness,
@@ -58,8 +59,8 @@ export async function playSound(happiness){
 }
 
 export async function activatePlushie() {
-  callService("input_boolean", "set_value", {
+  console.log("metoda a");
+  return callService("input_boolean", "turn_on", {
     entity_id: ENTITY_ACTIVATION,
-    value: "on"
   });
 }
