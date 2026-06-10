@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://homeassistant.local:8123',
+        target: 'http://172.20.10.11:8123',
         changeOrigin: true,
         secure: false,
       }
