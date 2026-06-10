@@ -171,6 +171,7 @@ export default {
     },
     async activate() {
       await activatePlushie(Number(this.$route.params.id));
+      await this.addPet();
 
       this.$router.push({
         name: "ljubimac",
