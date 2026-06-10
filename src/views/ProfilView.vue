@@ -1,22 +1,34 @@
 <template>
-    <div id="container">
-        <header>
-        <div class="wrapper">
-            <h1>Moj profil</h1>
-        </div>
-        </header>
+  <div class="max-w-3xl mx-auto">
+    <header class="mb-8 border-b border-pink-200 pb-4">
+      <h1 class="text-3xl font-bold text-pink-600">Moj profil</h1>
+    </header>
+
+    <div v-if="isAuthenticated && user" class="bg-white p-6 rounded-2xl shadow-sm mb-8 border border-slate-100 flex justify-between items-center">
+      <p class="text-lg text-slate-700 font-medium">Pozdrav, <span class="text-pink-500">{{ user.email }}</span>!</p>
     </div>
 
-    <div v-if="isAuthenticated && user">
-    <p>Pozdrav {{ user.email }}</p>
-    <button @click="logout">Logout</button>
+    <h2 class="text-2xl font-bold text-slate-700 mb-6">Tvoji ljubimci: </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div 
+        v-for="pet in myPets" 
+        :key="pet.id" 
+        class="bg-white p-5 rounded-2xl shadow hover:shadow-md transition-shadow border border-pink-50 flex flex-col justify-between"
+      >
+        <p class="text-xl font-bold text-slate-800 mb-3">{{ pet.pet_name }}</p>
+        <RouterLink 
+          :to="`/ljubimac/${pet.pet_id}`" 
+          class="inline-block text-center bg-pink-100 text-pink-700 px-4 py-2 rounded-full font-medium hover:bg-pink-200 transition-colors mt-auto"
+        >
+          Pogledaj stanje
+        </RouterLink>
+      </div>
     </div>
-    <h1>Tvoji ljubimci: </h1>
-      <div v-for="pet in myPets" :key="pet.id">
-        <p>Ime: {{ pet.pet_name }}</p>
-        <RouterLink :to="`/ljubimac/${pet.pet_id}`">Pogledaj stanje</RouterLink>
+    
+    <div v-if="myPets.length === 0" class="text-center py-10 bg-white rounded-2xl border border-dashed border-pink-200">
+      <p class="text-slate-500">Trenutno nemaš dodanih ljubimaca.</p>
     </div>
-
+  </div>
 </template>
 
 <script>

@@ -1,4 +1,7 @@
-*{
-  background-color: #fed7ff;
-  font-family: Verdana;
+@import "tailwindcss";
+
+body {
+  background-color: #fdf2f8; /* pink-50 */
+  font-family: 'Inter', 'Verdana', sans-serif;
+  color: #334155; /* slate-700 */
 }
