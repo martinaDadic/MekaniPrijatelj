@@ -89,7 +89,7 @@ export async function playSound(happiness){
 
 export async function activatePlushie() {
   // return setState(ENTITY_ACTIVATION, "on");
-  const res = await fetch(`${HA_BASE}/api/services/${ENTITY_ACTIVATION}`, {
+  const res = await fetch(`${HA_BASE}/api/states/${ENTITY_ACTIVATION}`, {
     method: "POST",
     headers,
     body: JSON.stringify({ value: "on" }), 
