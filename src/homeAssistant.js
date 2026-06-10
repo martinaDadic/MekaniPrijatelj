@@ -17,6 +17,8 @@ const V_ENTITY_ACTIVATION = "input_boolean.v_medvjedic_aktivan";
 
 
 function getBearEntities(id) {
+  id = Number(id);
+
   if (id === 1) {
     return {
       happiness: V_ENTITY_HAPPINESS,
