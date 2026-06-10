@@ -20,10 +20,6 @@ const router = createRouter({
       path: '/ljubimac/:id/activate',
       name: 'ljubimac-activate',
       component: LjubimacView,
-        beforeEnter: async () => {
-        await activatePlushie()
-        return true
-      },
     },
     {
       path: '/profil',
